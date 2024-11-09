@@ -184,3 +184,5 @@ cython_debug/
 *.swp
 *.swo
 *.plist
+
+/venv
