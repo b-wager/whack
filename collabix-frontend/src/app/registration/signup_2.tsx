@@ -1,10 +1,8 @@
-"use client"
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Github, Mail } from "lucide-react"
-import Image from "next/image"
 
 type AuthFormData = {
   email: string
@@ -38,26 +36,14 @@ export default function AuthScreen() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-white p-4">
       <div className="w-full max-w-md space-y-8">
-      <div className="flex-1 flex flex-col items-center justify-center gap-6 max-w-md w-full">
-        <div className="w-32 h-32 relative">
-          <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Snqakqefq59kAAr2QYjSWonQ5QUbED.png"
-            alt="Collabix Logo"
-            width={128}
-            height={128}
-            className="w-full h-full object-contain"
+        <div className="space-y-2 text-center">
+          <div 
+            className="h-16 w-16 mx-auto rounded-full"
+            style={{ backgroundColor: '#F28B50' }}
           />
+          <h1 className="text-2xl font-bold tracking-tight text-[#0D3640]">Welcome to LearnSpace</h1>
+          <p className="text-sm text-[#0D3640]/70">Your personalized learning journey begins here</p>
         </div>
-        
-        <h1 className="text-4xl font-bold text-emerald-600 tracking-tight">
-          Collabix
-        </h1>
-        
-        <p className="text-xl text-gray-600 text-center">
-          Collaborate smarter. Learn together.
-        </p>
-      </div>
-
 
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="w-full bg-[#D9D3CC]/20">
