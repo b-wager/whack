@@ -38,19 +38,19 @@ class ProjectMatch:
         
         # Calculate differences and weighted scores for each pair
         for a, b in pairs:
-            diff = np.abs(a.stats - b.stats)
+            diff = np.abs(a['stats'] - b['stats'])
             weighted_score = np.dot(diff, weights)
             
             self.compatible.append({
-                'profile1': a.name,
-                'profile2': b.name,
+                'profile1': a['name'],
+                'profile2': b['name'],
                 'differences': diff,
                 'weighted_score': weighted_score
             })
         
         # Create compatibility matrix
         self.compatibility_matrix = np.zeros((n_profiles, n_profiles))
-        self.names = [p.name for p in self.ProfileAll]
+        self.names = [p['name'] for p in self.ProfileAll]
         
         for result in self.compatible:
             i = self.names.index(result['profile1'])
