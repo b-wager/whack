@@ -1,26 +1,56 @@
 # app/models.py
 from django.db import models
-import bcrypt
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-class User(models.Model):
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("The Email field must be set")
+        extra_fields.setdefault("is_student", True)
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+
+class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
-    full_name = models.CharField(max_length=100)
-    date_of_birth = models.DateField()
-    phone_number = models.CharField(max_length=15)
-    password = models.CharField(max_length=128)
+    is_professor = models.BooleanField(default=False)
+    username = models.CharField(max_length=150, blank=True, null=True)
 
-    class Meta:
-        abstract = True
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
-    def set_password(self, raw_password):
-        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
-        self.password = hashed.decode('utf-8')
+    def __str__(self):
+        return self.email
 
-    def check_password(self, raw_password):
-        return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
 
-class Student(User):
-    pass  # Additional fields for students if needed
+class Survey(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    topic1 = models.IntegerField()
+    topic2 = models.IntegerField()
+    topic3 = models.IntegerField()
+    effort = models.IntegerField()
+    availability = models.DateTimeField()
+    questions = {
+        "topic1": topic1,
+        "topic2": topic2,
+        "topic3": topic3,
+        "effort": effort,
+        "availability": availability,
+    }
 
-class Professor(User):
-    pass  # Additional fields for professors if needed
+
+class StudentProfile(models.Model):
+    objects = CustomUserManager()
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    responses = models.ManyToManyField(Survey, blank=True)
+
+
+class ProfessorProfile(models.Model):
+    objects = CustomUserManager()
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
