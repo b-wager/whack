@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useRouter } from "next/navigation"
 
 interface GroupMember {
   id: string
@@ -65,6 +66,7 @@ const initialTasks: Task[] = [
 ]
 
 export default function Component() {
+  const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [activeTab, setActiveTab] = useState("overview")
 
@@ -72,6 +74,12 @@ export default function Component() {
     setTasks(tasks.map(task => 
       task.id === taskId ? { ...task, completed: !task.completed } : task
     ))
+  }
+
+  const handleTaskClick = () => {
+    setActiveTab("tasks")
+    // Alternatively, if you want to navigate to a separate task view:
+    // router.push('/group/taskview')
   }
 
   return (
@@ -106,7 +114,10 @@ export default function Component() {
             <Card className="bg-[#49F292]/10 border-[#43D9A2]">
               <CardContent className="p-4">
                 <h2 className="font-medium text-[#0D3640] mb-2">Next Action:</h2>
-                <Button className="w-full bg-[#43D9A2] text-[#0D3640] hover:bg-[#49F292]">
+                <Button 
+                  className="w-full bg-[#43D9A2] text-[#0D3640] hover:bg-[#49F292]"
+                  onClick={handleTaskClick}
+                >
                   Complete Team Charter
                 </Button>
               </CardContent>
