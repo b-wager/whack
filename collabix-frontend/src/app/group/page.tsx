@@ -251,7 +251,11 @@ export default function Component() {
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 border-t border-[#D9D3CC] bg-white px-6 py-2">
         <div className="flex justify-between items-center max-w-md mx-auto">
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => router.push('taskview')}
+          >
             <Home className="h-6 w-6 text-[#0D3640]" />
           </Button>
           <Button size="icon" className="bg-[#43D9A2] text-[#0D3640] hover:bg-[#49F292] rounded-full h-12 w-12">
