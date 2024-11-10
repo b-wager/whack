@@ -38,10 +38,6 @@ export default function Component() {
     }
   }
 
-  const handleMouseUp = () => {
-    setIsSelecting(false)
-  }
-
   const toggleSelection = (date: string, hour: number) => {
     setSelection(prev => {
       const newSelection = { ...prev }
@@ -107,7 +103,7 @@ export default function Component() {
               <div className="sticky left-0 z-10 bg-white text-right pr-2 py-2 text-sm text-[#0D3640]">
                 {hour % 12 || 12}{hour >= 12 ? 'PM' : 'AM'}
               </div>
-              {getDates().map((date, dateIndex) => {
+              {getDates().map((date) => {
                 const dateString = date.toISOString().split('T')[0]
                 return (
                   <div

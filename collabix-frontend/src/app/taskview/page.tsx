@@ -2,11 +2,9 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Flag, ChevronRight, Trophy, Star } from "lucide-react"
-import { useState } from "react"
+import { Flag, Trophy, Star } from "lucide-react"
 
 export default function Component() {
-  const [progress, setProgress] = useState(0)
 
   const projectStages = [
     {

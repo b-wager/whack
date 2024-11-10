@@ -41,7 +41,7 @@ const teammates: Teammate[] = [
 export default function Component() {
   const router = useRouter()
 
-  const handleTeammateClick = (teammateId: string) => {
+  const handleTeammateClick = () => {
     router.push(`/discover/feed/detail`)
   }
 
@@ -70,7 +70,7 @@ export default function Component() {
           <Card 
             key={teammate.id} 
             className="bg-[#49F292]/5 border-none cursor-pointer hover:bg-[#49F292]/10 transition-colors"
-            onClick={() => handleTeammateClick(teammate.id)}
+            onClick={() => handleTeammateClick()}
           >
             <CardContent className="p-4">
               <div className="flex items-start gap-3">

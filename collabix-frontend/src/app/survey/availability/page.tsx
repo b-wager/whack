@@ -101,7 +101,7 @@ export default function Component() {
         {/* Day headers */}
         <div className="grid grid-cols-[60px_1fr_1fr_1fr] mb-2">
           <div></div>
-          {days.map((day, index) => (
+          {days.map((day) => (
             <div key={day} className="text-center font-medium text-[#0D3640]">
               {day}
             </div>
