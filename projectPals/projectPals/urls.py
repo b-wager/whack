@@ -1,27 +1,9 @@
-# # projectPals/urls.py
-# from django.urls import path
-# from app.views import HomePageView, RegistrationView, LoginView
-
-# urlpatterns = [
-#     path('', HomePageView.as_view(), name='home'),
-#     path('api/register/<str:user_type>/', RegistrationView.as_view(), name='register'),
-#     path('api/login/', LoginView.as_view(), name='login'),
-# ]
-
-from django.urls import path
-from app.views import (
-    login_view,
-    logout_view,
-    dashboard,
-    survey_view,
-    matching_view,
-)
-
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path("login/", login_view, name="login"),
-    path("logout/", logout_view, name="logout"),
-    path("dashboard/", dashboard, name="dashboard"),
-    path("survey/", survey_view, name="survey"),
-    path("matching/", matching_view, name="matching"),
+    path('admin/', admin.site.urls),
+    path('students/', include('students.urls')),
+    path('courses/', include('courses.urls')),
+    path('projects/', include('projects.urls')),
 ]
