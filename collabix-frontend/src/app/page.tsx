@@ -1,3 +1,4 @@
+// This page requires client-side interactivity
 "use client"
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -5,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Github, Mail } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 type AuthFormData = {
   email: string
@@ -13,6 +15,7 @@ type AuthFormData = {
 }
 
 export default function AuthScreen() {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [formData, setFormData] = useState<AuthFormData>({
     email: "",
@@ -25,14 +28,24 @@ export default function AuthScreen() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
-    // Simulating API call
-    setTimeout(() => {
+    try {
+      // Simulating API call
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // In real app, you'd have authentication logic here
+      // const response = await signIn(formData)
+      // if (response.success) {
+      
+      router.push("/onboarding")
+    } catch (error) {
+      console.error("Authentication error:", error)
+      // Handle error (show toast, error message, etc.)
+    } finally {
       setIsLoading(false)
-      console.log("Form submitted:", formData)
-    }, 1500)
+    }
   }
 
   return (
