@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 interface TimeSlot {
   hour: number
@@ -12,6 +13,7 @@ interface TimeSlot {
 }
 
 export default function Component() {
+  const router = useRouter()
   const [isDragging, setIsDragging] = useState(false)
   const [startSlot, setStartSlot] = useState<{ hour: number; day: number } | null>(null)
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
@@ -65,6 +67,10 @@ export default function Component() {
   const handleMouseUp = () => {
     setIsDragging(false)
     setStartSlot(null)
+  }
+
+  const handleSubmit = () => {
+    router.push("/discover")
   }
 
   const days = ['Sun', 'Mon', 'Tue']
@@ -149,7 +155,10 @@ export default function Component() {
           <Button variant="outline" className="border-[#43D9A2] text-[#0D3640]">
             If needed
           </Button>
-          <Button className="bg-[#43D9A2] text-[#0D3640] hover:bg-[#49F292]">
+          <Button 
+            className="bg-[#43D9A2] text-[#0D3640] hover:bg-[#49F292]"
+            onClick={handleSubmit}
+          >
             Available
           </Button>
         </div>

@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useRouter } from "next/navigation"
 
 interface MatchedPartner {
   id: string
@@ -44,10 +45,14 @@ const matchedPartners: MatchedPartner[] = [
 ]
 
 export default function Component() {
+  const router = useRouter()
   const [invitedPartners, setInvitedPartners] = useState<string[]>([])
 
   const handleInvite = (partnerId: string) => {
     setInvitedPartners(prev => [...prev, partnerId])
+    setTimeout(() => {
+      router.push('/group')
+    }, 500)
   }
 
   return (

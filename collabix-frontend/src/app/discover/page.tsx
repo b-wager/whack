@@ -3,8 +3,11 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function Component() {
+  const router = useRouter()
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-white p-4">
       <Card className="w-full max-w-md border-0 shadow-lg shadow-[#43D9A2]/20">
@@ -34,24 +37,17 @@ export default function Component() {
           <div className="space-y-4">
             <Button 
               className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-[#43D9A2] to-[#49F292] text-white hover:from-[#49F292] hover:to-[#43D9A2]"
-              onClick={() => console.log("Start matching")}
+              onClick={() => router.push("/discover/feed")}
             >
               Start Matching
             </Button>
             <Button 
               variant="outline"
               className="w-full border-[#0D3640]/20 text-[#0D3640] hover:bg-[#0D3640]/5"
-              onClick={() => console.log("Skip for now")}
+              onClick={() => router.push("/discover/feed")}
             >
               Skip for now
             </Button>
-          </div>
-
-          <div className="flex items-center justify-center space-x-2">
-            <div className="w-2 h-2 rounded-full bg-[#43D9A2]" />
-            <div className="w-2 h-2 rounded-full bg-[#D9D3CC]" />
-            <div className="w-2 h-2 rounded-full bg-[#D9D3CC]" />
-            <div className="w-2 h-2 rounded-full bg-[#D9D3CC]" />
           </div>
         </CardContent>
       </Card>
