@@ -1,24 +1,55 @@
-# app/models.py
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 
 
+# Custom user manager
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("The Email field must be set")
-        extra_fields.setdefault("is_student", True)
+    """
+    Custom user manager where email is the unique identifiers for authentication
+    """
+
+    def create_user(self, email: str, password: str, **kwargs: dict):
+        """
+        Create and return a regular user with an email and password.
+
+        params:
+            email: the email of the user
+            password: the password of the user
+            extra_fields: additional fields to set on the user
+
+        returns:
+            the created user
+        """
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=email, **kwargs)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
 
 class CustomUser(AbstractUser):
+    """
+    Custom user model with email as the unique identifier.
+    """
+
     email = models.EmailField(unique=True)
     is_professor = models.BooleanField(default=False)
     username = models.CharField(max_length=150, blank=True, null=True)
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name="groups",  # Add related_name to avoid clash
+        blank=True,
+        help_text="The groups this user belongs to.",
+        verbose_name="groups",
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name="permissions",  # Add related_name to avoid clash
+        blank=True,
+        help_text="Specific permissions for this user.",
+        verbose_name="user permissions",
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -27,30 +58,49 @@ class CustomUser(AbstractUser):
         return self.email
 
 
-class Survey(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    topic1 = models.IntegerField()
-    topic2 = models.IntegerField()
-    topic3 = models.IntegerField()
-    effort = models.IntegerField()
-    availability = models.DateTimeField()
-    questions = {
-        "topic1": topic1,
-        "topic2": topic2,
-        "topic3": topic3,
-        "effort": effort,
-        "availability": availability,
-    }
-
-
 class StudentProfile(models.Model):
-    objects = CustomUserManager()
+    """
+    Student profile model
+    """
+
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    responses = models.ManyToManyField(Survey, blank=True)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class ProfessorProfile(models.Model):
-    objects = CustomUserManager()
+    """
+    Professor profile model
+    """
+
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class SurveyResponse(models.Model):
+    """
+    Survey response model
+    """
+
+    student = models.OneToOneField(StudentProfile, on_delete=models.CASCADE)
+
+    # Survey questions
+    topic_1_understanding = models.IntegerField(
+        default=3, choices=[(i, str(i)) for i in range(5)]
+    )
+    topic_2_understanding = models.IntegerField(
+        default=3, choices=[(i, str(i)) for i in range(5)]
+    )
+    topic_3_understanding = models.IntegerField(
+        default=3, choices=[(i, str(i)) for i in range(5)]
+    )
+    effort = models.IntegerField(default=4, choices=[(i, str(i)) for i in range(7)])
+    availability = models.JSONField(default=dict)
+
+    def __str__(self):
+        return f"Survey for {self.student.name}"
