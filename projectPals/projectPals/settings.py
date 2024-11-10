@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-!uszc8$y5b4=!q!@fo#fjetd1p6oqdzbj5loml%m28%1*rjoax
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -36,8 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'students',
+    'courses',
+    'projects',
+    'rest_framework',
 ]
+
+AUTH_USER_MODEL = 'students.Student'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,6 +71,16 @@ TEMPLATES = [
         },
     },
 ]
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',  # Change to this
+#     ],
+# }
+
 
 WSGI_APPLICATION = 'projectPals.wsgi.application'
 
