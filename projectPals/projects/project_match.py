@@ -77,18 +77,20 @@ class ProjectMatch:
         return self.compatibility_matrix
 
     def find_optimal_pairs(self):
-        """Find optimal pairings that minimize total compatibility differences"""
+        """
+        Find optimal pairings that minimize total compatibility differences
+"""
         if len(self.ProfileAll) % 2 != 0:
             print("\nWarning: Odd number of profiles. One profile will be unpaired.")
-        
+
         # Get compatibility matrix if not already calculated
         if self.compatibility_matrix is None:
             self.compatibility()
-        
+
         # Prepare matrix for Hungarian algorithm
         n = len(self.ProfileAll)
         cost_matrix = self.compatibility_matrix.copy()
-        
+
         # Handle odd number of profiles by padding
         if n % 2 != 0:
             n += 1
@@ -96,11 +98,11 @@ class ProjectMatch:
             cost_matrix = np.vstack([cost_matrix, padding])
             padding = np.zeros((cost_matrix.shape[0], 1))
             cost_matrix = np.hstack([cost_matrix, padding])
-        
+
         # Reshape matrix to handle pairwise assignments
         n_pairs = n // 2
         reshaped_matrix = np.zeros((n, n))
-        
+
         # Fill reshaped matrix with costs of pairing combinations
         for i in range(n):
             for j in range(n):
@@ -108,18 +110,19 @@ class ProjectMatch:
                     reshaped_matrix[i, j] = cost_matrix[i, j]
                 else:
                     reshaped_matrix[i, j] = float('inf')  # Prevent self-pairing
-        
+
         # Find optimal assignments
         row_ind, col_ind = linear_sum_assignment(reshaped_matrix)
-        
+
         # Process and print results
         print("\nOptimal Pairings:")
         print("-" * 50)
-        
+
         used_indices = set()
         total_compatibility_score = 0
         pair_counter = 1
-        
+        pairs = []  # Store pairs for return value
+
         for i in range(len(row_ind)):
             row, col = row_ind[i], col_ind[i]
             
@@ -132,6 +135,9 @@ class ProjectMatch:
             score = self.compatibility_matrix[row, col]
             total_compatibility_score += score
             
+            # Store pair information
+            pairs.append((self.names[row], self.names[col], score))
+            
             print(f"\nPair {pair_counter}:")
             print(f"  {self.names[row]} <-> {self.names[col]}")
             print(f"  Compatibility Score: {score:.2f}")
@@ -139,15 +145,21 @@ class ProjectMatch:
             used_indices.add(row)
             used_indices.add(col)
             pair_counter += 1
-        
+
         # Check for unpaired profiles
         unpaired = set(range(len(self.names))) - used_indices
+        unpaired_names = []
         if unpaired:
             print("\nUnpaired Profiles:")
             for idx in unpaired:
+                unpaired_names.append(self.names[idx])
                 print(f"  {self.names[idx]}")
-        
-        print(f"\nTotal Compatibility Score: {total_compatibility_score:.2f}")
+
         n_pairs = len(used_indices) // 2
-        print(f"Average Pair Score: {total_compatibility_score/n_pairs:.2f}")
+        avg_score = total_compatibility_score/n_pairs if n_pairs > 0 else 0
+
+        print(f"\nTotal Compatibility Score: {total_compatibility_score:.2f}")
+        print(f"Average Pair Score: {avg_score:.2f}")
+
+        return pairs, unpaired_names, total_compatibility_score, avg_score
 
